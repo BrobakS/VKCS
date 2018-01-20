@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="13e7e852fbe74053b82cf7ee55b3f64e" Name="Diagram1" ZoomLevel="86">
+        <EntityTypeShape EntityType="DatabaseModel.ClassPointSystem" Width="1.5" PointX="0.5" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.Cup" Width="1.5" PointX="0.5" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.Driver" Width="1.5" PointX="10.75" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.PointSystem" Width="1.5" PointX="0.5" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.Race" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.RaceResult" Width="1.5" PointX="4.625" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.Season" Width="1.5" PointX="2.625" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.Standin" Width="1.5" PointX="10" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.Team" Width="1.5" PointX="4.625" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.TeamDriver" Width="1.5" PointX="7.125" PointY="7.375" IsExpanded="true" />
+        <AssociationConnector Association="DatabaseModel.FK_Season_ToCup" ManuallyRouted="false" />
+        <AssociationConnector Association="DatabaseModel.FK_RaceResult_ToDriver" ManuallyRouted="false" />
+        <AssociationConnector Association="DatabaseModel.FK_Standins_ToDriver" ManuallyRouted="false" />
+        <AssociationConnector Association="DatabaseModel.FK_TeamDrivers_ToDriver" ManuallyRouted="false" />
+        <AssociationConnector Association="DatabaseModel.FK_Season_ToPointSystem" ManuallyRouted="false" />
+        <AssociationConnector Association="DatabaseModel.FK_Race_ToSeason" ManuallyRouted="false" />
+        <AssociationConnector Association="DatabaseModel.FK_RaceResult_ToRace" ManuallyRouted="false" />
+        <AssociationConnector Association="DatabaseModel.FK_Standins_ToRace" ManuallyRouted="false" />
+        <AssociationConnector Association="DatabaseModel.FK_Team_ToSeason" ManuallyRouted="false" />
+        <AssociationConnector Association="DatabaseModel.FK_Standins_ToTeam" ManuallyRouted="false" />
+        <AssociationConnector Association="DatabaseModel.FK_TeamDrivers_ToTeam" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DatabaseModel.ClassType" Width="1.5" PointX="0.5" PointY="5.75" />
+        <AssociationConnector Association="DatabaseModel.FK_ClassPointSystem_ToClass1" />
+        <AssociationConnector Association="DatabaseModel.FK_ClassType_ToPointSystem" />
+        <AssociationConnector Association="DatabaseModel.FK_RaceResult_ToClassType" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

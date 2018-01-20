@@ -1,0 +1,379 @@
+﻿<!DOCTYPE html>
+<html  >
+<head>
+
+    <meta charset="utf-8" />
+    <title>WebFrontEnd</title>
+
+    <link href="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.5/angular-material.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="css/default.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+    <!--<script src="js/angular.min.js"></script>-->
+
+    <script src='js/pdfmake.min.js'></script>
+    <script src='js/vfs_fonts.js'></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
+    <script src="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.5/angular-material.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/myApp.js"></script>
+</head>
+<body ng-app="VandelKartingStandings" ng-controller="standingsCtrl as stdCtrl" ng-init="stdCtrl.init()">
+    <div class="page">
+        <div class="header">
+
+            <ul>
+                <li></li>
+                <li class="selected">
+                    <a href="">Cups</a>
+                </li>
+                <li>
+                    <a href="">Pointsystemer</a>
+                </li>
+                <li></li>
+            </ul>
+            <div class="featured">
+
+            </div>
+        </div>
+        <div class="body">
+
+
+            <div class="sidebar">
+
+            </div>
+            {{}}
+            <div class="content">
+                <!--Cup selector-->
+                <md-content class="md-padding">
+                    <md-autocomplete md-no-cache="true"
+                                     md-selected-item="stdCtrl.selectedCup"
+                                     md-search-text="stdCtrl.cupSearchText"
+                                     md-selected-item-change="stdCtrl.SelectCup(cup)"
+                                     md-items="cup in stdCtrl.CupSearch(stdCtrl.cupSearchText)"
+                                     md-item-text="cup.Name"
+                                     md-min-length="0"
+                                     placeholder="Vælg en Cup">
+                        <md-item-template>
+                            <span md-highlight-text="stdCtrl.cupSearchText" md-highlight-flags="^i">{{cup.Name}}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            <a ng-click="stdCtrl.newCup(stdCtrl.cupSearchText)"> Opret en ny!</a>
+                        </md-not-found>
+                    </md-autocomplete>
+                </md-content>
+
+                <!--Season selector-->
+                <md-content class="md-padding">
+                    <md-autocomplete md-no-cache="true"
+                                     md-selected-item="stdCtrl.selectedSeason"
+                                     md-search-text="stdCtrl.seasonSearchText"
+                                     md-selected-item-change="stdCtrl.SelectSeason(season)"
+                                     md-items="season in stdCtrl.SeasonSearch(stdCtrl.seasonSearchText)"
+                                     md-item-text="season.Name"
+                                     md-min-length="0"
+                                     placeholder="Vælg en Sæson">
+                        <md-item-template>
+                            <span md-highlight-text="stdCtrl.seasonSearchText" md-highlight-flags="^i">{{season.Name}}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            Ingen sæsoner matchende "{{stdCtrl.seasonSearchText}}" blev fundet. Opret en ny!
+                            <!--<a ng-click="stdCtrl.newSeason(stdCtrl.seasonSearchText)">Ingen sæsoner matchende "{{stdCtrl.seasonSearchText}}" blev fundet. Opret en ny!</a>-->
+                        </md-not-found>
+                    </md-autocomplete>
+                </md-content>
+
+
+                <!-- Opret sæson knap-->
+                <md-button class="md-primary md-raised" ng-click="stdCtrl.ShowCreateSeason()" ng-if="stdCtrl.selectedCup">Opret sæson</md-button>
+
+                <!-- Opret løb knap-->
+                <md-button class="md-primary md-raised" ng-click="stdCtrl.ShowCreateRace()" ng-if="stdCtrl.selectedSeason">Opret løb</md-button>
+
+                <md-button class="md-primary md-raised" ng-click="stdCtrl.ShowCreateTeam()" ng-if="stdCtrl.selectedSeason">Opret Hold</md-button>
+
+                <md-button class="md-primary md-raised" ng-click="stdCtrl.createPDF()" ng-if="stdCtrl.selectedSeason">Opret PDF</md-button>
+
+
+            </div>
+
+            <!--individual Standings table-->
+
+            <div class="card card--has-table">
+                <div class="card__content">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-standings table-standings--full table-standings--full-football">
+                            <thead>
+                                <tr>
+                                    <th class="standings__pos">Pos</th>
+                                    <th class="standings__driver" ng-click='stdCtrl.setOrderBy("name")'>Driver</th>
+                                    <th ng-repeat="race in stdCtrl.selectedSeason.Races">
+                                        <i ng-click="stdCtrl.setOrderBy(race.Id)">{{race.Name}}</i>
+                                        <i class="fa fa-pencil-square-o icon" aria-hidden="true" ng-click="stdCtrl.ShowRace(race); raceModalStyle={'display': 'block'}"></i>
+                                        <i class="fa fa-trash-o icon" aria-hidden="true" ng-click="stdCtrl.DeleteRace(race);" confirm="Er du sikker på at du vil slette, {{race.Name}}?"></i>
+                                    </th>
+                                    <th class="standings__total" ng-click='stdCtrl.setOrderBy("total")'>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="driver in stdCtrl.Drivers | orderBy: '-totalPoints'" ng-if="driver !=empty">
+                                    <td class="team-standings__pos">{{$index+1}}</td>
+                                    <td class="team-standings__team">
+                                        <div class="team-meta">
+                                            <div class="team-meta__info">
+                                                <h3 class="team-meta__name">{{driver.Name}}</h3>
+                                                <!--<span class="team-meta__place">J.Jyde/J.Dalsgaard</span>-->
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td ng-repeat="race in stdCtrl.selectedSeason.Races">
+                                        {{driver.points[race.Id]}}
+                                    </td>
+                                    <td class="team-standings__total">{{driver.totalPoints}}</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--Team Standings table-->
+
+            <div class="card card--has-table">
+                <div class="card__content">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-standings table-standings--full table-standings--full-football">
+                            <thead>
+                            <tr>
+                                <th class="standings__pos">Pos</th>
+                                <th class="standings__driver" ng-click='stdCtrl.setOrderBy("name")'>Hold</th>
+                                <th ng-repeat="race in stdCtrl.selectedSeason.Races">
+                                    <i ng-click="stdCtrl.setOrderBy(race.Id)">{{race.Name}}</i>
+                                    <i class="fa fa-pencil-square-o icon" aria-hidden="true" ng-click="stdCtrl.ShowRace(race); raceModalStyle={'display': 'block'}"></i>
+                                    <i class="fa fa-trash-o icon" aria-hidden="true" ng-click="stdCtrl.DeleteRace(race);" confirm="Er du sikker på at du vil slette, {{race.Name}}?"></i>
+                                </th>
+                                <th class="standings__total" ng-click='stdCtrl.setOrderBy("total")'>Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="team in stdCtrl.Teams | orderBy: '-totalPoints'" ng-if="team !=empty">
+                                <td class="team-standings__pos">{{$index+1}}</td>
+                                <td class="team-standings__team">
+                                    <div class="team-meta">
+                                        <div class="team-meta__info">
+                                            <h3 class="team-meta__name">{{team.Name}}</h3>
+                                            <!--<span class="team-meta__place">J.Jyde/J.Dalsgaard</span>-->
+                                        </div>
+                                    </div>
+                                </td>
+                                <td ng-repeat="race in stdCtrl.selectedSeason.Races">
+                                    {{team.points[race.Id]}}
+                                </td>
+                                <td class="team-standings__total">{{team.totalPoints}}</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+
+
+        </div>
+
+        
+        <div class="footer">
+
+        </div>
+    </div>
+    
+    <!-- Create season Modal -->
+    <div id="createSeasonModal" class="createSeasonModal" ng-show="stdCtrl.showCreateSeasonModal">
+        <!-- Modal content   -->
+        <div class="modal-content" >
+            <span ng-class="close" ng-click="stdCtrl.CloseCreateSeason()">&times;</span>
+            <div class="card card--has-table">
+                <div class="card__content">
+                    <md-content>
+                        <label>Sæson navn</label>
+                        <input type="text" ng-model="newSeasonName" required>
+                    </md-content>
+                    <md-content>
+                        <label>Pointsystem</label>
+                        <select name="repeatSelect" id="repeatSelect" ng-model="stdCtrl.newSeasonPointSystem" required>
+                            <option ng-repeat="option in stdCtrl.AllPointsystems" value="{{option.Id}}">{{option.Name}}</option>
+                        </select>
+                    </md-content>
+                    <md-button class="md-primary md-raised" ng-click="stdCtrl.NewSeason(newSeasonName, stdCtrl.selectedCup.Id, stdCtrl.newSeasonPointSystem)">Opret</md-button>
+                </div>
+            </div>
+        </div>
+    </div>  
+    
+    <!-- Create Team Modal -->
+    <div id="createTeamModal" class="createTeamModal" ng-show="stdCtrl.showCreateTeamModal">
+        <!-- Modal content   -->
+        <div class="modal-content" >
+            <span ng-class="close" ng-click="stdCtrl.CloseCreateTeam()">&times;</span>
+            <div class="card card--has-table">
+                <div class="card__content">
+                    <md-content>
+                        <label>Hold navn</label>
+                        <input type="text" ng-model="newTeamName" required>
+                    </md-content>
+                    
+                    <md-content class="md-padding">
+                        <md-autocomplete md-no-cache="true"
+                                         md-selected-item=""
+                                         md-search-text="stdCtrl.CreateTeamDriver1Name"
+                                         md-selected-item-change="stdCtrl.CreateTeamDriver1 = driver"
+                                         md-items="driver in stdCtrl.DriverSearch(stdCtrl.CreateTeamDriver1Name)"
+                                         md-item-text="driver.Name"
+                                         md-min-length="0"
+                                         placeholder="Vælg en Kører">
+                            <md-item-template>
+                                <span md-highlight-text="stdCtrl.CreateTeamDriver1Name" md-highlight-flags="^i">{{driver.Name}}</span>
+                            </md-item-template>
+                            <md-not-found>
+                                                    
+                                <a>
+                                    Ingen kører matchende "{{stdCtrl.CreateTeamDriver1Name}}" blev fundet. Opret en ny!
+                                </a>
+
+                            </md-not-found>
+                        </md-autocomplete>
+                        
+                        <md-autocomplete md-no-cache="true"
+                                         md-selected-item=""
+                                         md-search-text="stdCtrl.CreateTeamDriver2Name"
+                                         md-selected-item-change="stdCtrl.CreateTeamDriver2 = driver"
+                                         md-items="driver in stdCtrl.DriverSearch(stdCtrl.CreateTeamDriver2Name)"
+                                         md-item-text="driver.Name"
+                                         md-min-length="0"
+                                         placeholder="Vælg en Kører">
+                            <md-item-template>
+                                <span md-highlight-text="stdCtrl.CreateTeamDriver2Name" md-highlight-flags="^i">{{driver.Name}}</span>
+                            </md-item-template>
+                            <md-not-found>
+                                                    
+                                <a>
+                                    Ingen kører matchende "{{stdCtrl.CreateTeamDriver2Name}}" blev fundet.
+                                </a>
+
+                            </md-not-found>
+                        </md-autocomplete>
+                    </md-content>
+
+                    <md-button class="md-primary md-raised" ng-click="stdCtrl.NewTeam(newTeamName, stdCtrl.CreateTeamDriver1.Id, stdCtrl.CreateTeamDriver2.Id)">Opret</md-button>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+<!-- Create Race Modal -->
+    <div id="createRaceModal" class="createRaceModal" ng-show="stdCtrl.showCreateRaceModal">
+    <!-- Modal content   -->
+        <div class="modal-content" >
+            <span ng-class="close" ng-click="stdCtrl.CloseCreateRace()">&times;</span>
+            <div class="card card--has-table">
+                <div class="card__content">
+                    <md-content>
+                        <label>Løbs navn</label>
+                        <input type="text" ng-model="newRaceName" required>
+                    </md-content>
+
+
+                    
+                    <md-button class="md-primary md-raised" ng-click="stdCtrl.NewRace(newRaceName)">Opret</md-button>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+    <!-- Update Race result Modal -->
+    <div id="raceModal" class="raceModal" ng-show="stdCtrl.showRaceModal">
+        <!-- Modal content   -->
+        <div class="modal-content" >
+            <span ng-class="close" ng-click="stdCtrl.CloseRace()">&times;</span>
+            <div class="card card--has-table">
+                <div class="card__content">
+                    <!--Class selector-->
+                    <md-content class="md-padding">
+                        <md-autocomplete md-no-cache="true"
+                                         md-selected-item="stdCtrl.selectedClass"
+                                         md-search-text="stdCtrl.classSearchText"
+                                         md-selected-item-change="stdCtrl.SelectClass(classType)"
+                                         md-items="classType in stdCtrl.ClassSearch(stdCtrl.classSearchText)"
+                                         md-item-text="classType.Name"
+                                         md-min-length="0"
+                                         placeholder="Vælg en Klasse">
+                            <md-item-template>
+                                <span md-highlight-text="stdCtrl.classSearchText" md-highlight-flags="^i">{{classType.Name}}</span>
+                            </md-item-template>
+                            <md-not-found>
+                                Ingen klasser matchende "{{stdCtrl.classSearchText}}" blev fundet.
+                            </md-not-found>
+                        </md-autocomplete>
+                    </md-content>
+                    <!--Race Class Result table-->
+                    <div class="table-responsive">
+                        <table class="table table-hover table-standings table-standings--full table-standings--full-football">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <i>Position</i>
+                                    </th>
+                                    <th>
+                                        <i>Kører</i>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="result in stdCtrl.selectedRaceResults| filter : {ClassTypeId: stdCtrl.selectedClass.Id} | orderBy :'Position'">
+                                    <td class="team-standings__pos">{{result.Position}}</td>
+
+                                    <td class="">
+                                        <!--Driver selector-->
+                                        <md-content class="md-padding">
+                                            <md-autocomplete md-no-cache="true"
+                                                             md-selected-item="result.Driver"
+                                                             md-search-text="stdCtrl.ResultDriverSearchText[result.Position]"
+                                                             md-selected-item-change="stdCtrl.SelectDriver(driver, result)"
+                                                             md-items="driver in stdCtrl.DriverSearch(stdCtrl.ResultDriverSearchText[result.Position])"
+                                                             md-item-text="driver.Name"
+                                                             md-min-length="0"
+                                                             placeholder="Vælg en Kører">
+                                                <md-item-template>
+                                                    <span md-highlight-text="stdCtrl.ResultDriverSearchText[result.Position]" md-highlight-flags="^i">{{driver.Name}}</span>
+                                                </md-item-template>
+                                                <md-not-found>
+                                                    
+                                                    <a ng-click="stdCtrl.newDriver(stdCtrl.ResultDriverSearchText[result.Position], result)">
+                                                        Ingen kører matchende "{{stdCtrl.ResultDriverSearchText[result.Position]}}" blev fundet. Opret en ny!
+                                                    </a>
+
+                                                </md-not-found>
+                                            </md-autocomplete>
+                                        </md-content>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+          
+    </div>
+
+
+</body>
+</html>

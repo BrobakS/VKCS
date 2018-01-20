@@ -1,0 +1,822 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ClassPointSystem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClassId" Type="int" Nullable="false" />
+          <Property Name="Position" Type="int" Nullable="false" />
+          <Property Name="Points" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClassType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="100" />
+          <Property Name="PointSystemId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Driver">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PointSystem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Race">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="SeasonId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RaceResult">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RaceId" Type="int" Nullable="false" />
+          <Property Name="DriverId" Type="int" />
+          <Property Name="Position" Type="int" Nullable="false" />
+          <Property Name="ClassTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Season">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="100" />
+          <Property Name="CupId" Type="int" Nullable="false" />
+          <Property Name="PointSystemId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Standins">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TeamId" Type="int" Nullable="false" />
+          <Property Name="DriverId" Type="int" Nullable="false" />
+          <Property Name="RaceId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Team">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="SeasonId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TeamDrivers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TeamId" Type="int" Nullable="false" />
+          <Property Name="DriverId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ClassPointSystem_ToClass">
+          <End Role="ClassType" Type="Self.ClassType" Multiplicity="1" />
+          <End Role="ClassPointSystem" Type="Self.ClassPointSystem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClassType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ClassPointSystem">
+              <PropertyRef Name="ClassId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClassType_ToPointSystem">
+          <End Role="PointSystem" Type="Self.PointSystem" Multiplicity="1" />
+          <End Role="ClassType" Type="Self.ClassType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PointSystem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ClassType">
+              <PropertyRef Name="PointSystemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Race_ToSeason">
+          <End Role="Season" Type="Self.Season" Multiplicity="1" />
+          <End Role="Race" Type="Self.Race" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Season">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Race">
+              <PropertyRef Name="SeasonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RaceResult_ToClassType">
+          <End Role="ClassType" Type="Self.ClassType" Multiplicity="1" />
+          <End Role="RaceResult" Type="Self.RaceResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClassType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceResult">
+              <PropertyRef Name="ClassTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RaceResult_ToDriver">
+          <End Role="Driver" Type="Self.Driver" Multiplicity="0..1" />
+          <End Role="RaceResult" Type="Self.RaceResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Driver">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceResult">
+              <PropertyRef Name="DriverId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RaceResult_ToRace">
+          <End Role="Race" Type="Self.Race" Multiplicity="1" />
+          <End Role="RaceResult" Type="Self.RaceResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Race">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceResult">
+              <PropertyRef Name="RaceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Season_ToCup">
+          <End Role="Cup" Type="Self.Cup" Multiplicity="1" />
+          <End Role="Season" Type="Self.Season" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Season">
+              <PropertyRef Name="CupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Season_ToPointSystem">
+          <End Role="PointSystem" Type="Self.PointSystem" Multiplicity="1" />
+          <End Role="Season" Type="Self.Season" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PointSystem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Season">
+              <PropertyRef Name="PointSystemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Standins_ToDriver">
+          <End Role="Driver" Type="Self.Driver" Multiplicity="1" />
+          <End Role="Standins" Type="Self.Standins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Driver">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Standins">
+              <PropertyRef Name="DriverId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Standins_ToRace">
+          <End Role="Race" Type="Self.Race" Multiplicity="1" />
+          <End Role="Standins" Type="Self.Standins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Race">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Standins">
+              <PropertyRef Name="RaceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Standins_ToTeam">
+          <End Role="Team" Type="Self.Team" Multiplicity="1" />
+          <End Role="Standins" Type="Self.Standins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Standins">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Team_ToSeason">
+          <End Role="Season" Type="Self.Season" Multiplicity="1" />
+          <End Role="Team" Type="Self.Team" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Season">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Team">
+              <PropertyRef Name="SeasonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TeamDrivers_ToDriver">
+          <End Role="Driver" Type="Self.Driver" Multiplicity="1" />
+          <End Role="TeamDrivers" Type="Self.TeamDrivers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Driver">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TeamDrivers">
+              <PropertyRef Name="DriverId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TeamDrivers_ToTeam">
+          <End Role="Team" Type="Self.Team" Multiplicity="1" />
+          <End Role="TeamDrivers" Type="Self.TeamDrivers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TeamDrivers">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DatabaseModelStoreContainer">
+          <EntitySet Name="ClassPointSystem" EntityType="Self.ClassPointSystem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClassType" EntityType="Self.ClassType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cup" EntityType="Self.Cup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Driver" EntityType="Self.Driver" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PointSystem" EntityType="Self.PointSystem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Race" EntityType="Self.Race" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RaceResult" EntityType="Self.RaceResult" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Season" EntityType="Self.Season" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Standins" EntityType="Self.Standins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Team" EntityType="Self.Team" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TeamDrivers" EntityType="Self.TeamDrivers" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ClassPointSystem_ToClass" Association="Self.FK_ClassPointSystem_ToClass">
+            <End Role="ClassType" EntitySet="ClassType" />
+            <End Role="ClassPointSystem" EntitySet="ClassPointSystem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClassType_ToPointSystem" Association="Self.FK_ClassType_ToPointSystem">
+            <End Role="PointSystem" EntitySet="PointSystem" />
+            <End Role="ClassType" EntitySet="ClassType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Race_ToSeason" Association="Self.FK_Race_ToSeason">
+            <End Role="Season" EntitySet="Season" />
+            <End Role="Race" EntitySet="Race" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RaceResult_ToClassType" Association="Self.FK_RaceResult_ToClassType">
+            <End Role="ClassType" EntitySet="ClassType" />
+            <End Role="RaceResult" EntitySet="RaceResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RaceResult_ToDriver" Association="Self.FK_RaceResult_ToDriver">
+            <End Role="Driver" EntitySet="Driver" />
+            <End Role="RaceResult" EntitySet="RaceResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RaceResult_ToRace" Association="Self.FK_RaceResult_ToRace">
+            <End Role="Race" EntitySet="Race" />
+            <End Role="RaceResult" EntitySet="RaceResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Season_ToCup" Association="Self.FK_Season_ToCup">
+            <End Role="Cup" EntitySet="Cup" />
+            <End Role="Season" EntitySet="Season" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Season_ToPointSystem" Association="Self.FK_Season_ToPointSystem">
+            <End Role="PointSystem" EntitySet="PointSystem" />
+            <End Role="Season" EntitySet="Season" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Standins_ToDriver" Association="Self.FK_Standins_ToDriver">
+            <End Role="Driver" EntitySet="Driver" />
+            <End Role="Standins" EntitySet="Standins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Standins_ToRace" Association="Self.FK_Standins_ToRace">
+            <End Role="Race" EntitySet="Race" />
+            <End Role="Standins" EntitySet="Standins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Standins_ToTeam" Association="Self.FK_Standins_ToTeam">
+            <End Role="Team" EntitySet="Team" />
+            <End Role="Standins" EntitySet="Standins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Team_ToSeason" Association="Self.FK_Team_ToSeason">
+            <End Role="Season" EntitySet="Season" />
+            <End Role="Team" EntitySet="Team" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TeamDrivers_ToDriver" Association="Self.FK_TeamDrivers_ToDriver">
+            <End Role="Driver" EntitySet="Driver" />
+            <End Role="TeamDrivers" EntitySet="TeamDrivers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TeamDrivers_ToTeam" Association="Self.FK_TeamDrivers_ToTeam">
+            <End Role="Team" EntitySet="Team" />
+            <End Role="TeamDrivers" EntitySet="TeamDrivers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ClassPointSystem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClassId" Type="Int32" Nullable="false" />
+          <Property Name="Position" Type="Int32" Nullable="false" />
+          <Property Name="Points" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Seasons" Relationship="Self.FK_Season_ToCup" FromRole="Cup" ToRole="Season" />
+        </EntityType>
+        <EntityType Name="Driver">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DisplayName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="RaceResults" Relationship="Self.FK_RaceResult_ToDriver" FromRole="Driver" ToRole="RaceResult" />
+        </EntityType>
+        <EntityType Name="PointSystem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="ClassTypes" Relationship="DatabaseModel.FK_ClassType_ToPointSystem" FromRole="PointSystem" ToRole="ClassType" />
+        </EntityType>
+        <EntityType Name="Race">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SeasonId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="RaceResults" Relationship="Self.FK_RaceResult_ToRace" FromRole="Race" ToRole="RaceResult" />
+          <NavigationProperty Name="Standins" Relationship="Self.FK_Standins_ToRace" FromRole="Race" ToRole="Standins" />
+        </EntityType>
+        <EntityType Name="RaceResult">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RaceId" Type="Int32" Nullable="false" />
+          <Property Name="DriverId" Type="Int32" />
+          <Property Name="Position" Type="Int32" Nullable="false" />
+          <Property Name="ClassTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ClassType" Relationship="DatabaseModel.FK_RaceResult_ToClassType" FromRole="RaceResult" ToRole="ClassType" />
+        </EntityType>
+        <EntityType Name="Season">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CupId" Type="Int32" Nullable="false" />
+          <Property Name="PointSystemId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="PointSystem" Relationship="Self.FK_Season_ToPointSystem" FromRole="Season" ToRole="PointSystem" />
+          <NavigationProperty Name="Races" Relationship="Self.FK_Race_ToSeason" FromRole="Season" ToRole="Race" />
+          <NavigationProperty Name="Teams" Relationship="Self.FK_Team_ToSeason" FromRole="Season" ToRole="Team" />
+        </EntityType>
+        <EntityType Name="Standin">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TeamId" Type="Int32" Nullable="false" />
+          <Property Name="DriverId" Type="Int32" Nullable="false" />
+          <Property Name="RaceId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Driver" Relationship="Self.FK_Standins_ToDriver" FromRole="Standins" ToRole="Driver" />
+        </EntityType>
+        <EntityType Name="Team">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SeasonId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Standins" Relationship="Self.FK_Standins_ToTeam" FromRole="Team" ToRole="Standins" />
+          <NavigationProperty Name="TeamDrivers" Relationship="Self.FK_TeamDrivers_ToTeam" FromRole="Team" ToRole="TeamDrivers" />
+        </EntityType>
+        <EntityType Name="TeamDriver">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TeamId" Type="Int32" Nullable="false" />
+          <Property Name="DriverId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Driver" Relationship="Self.FK_TeamDrivers_ToDriver" FromRole="TeamDrivers" ToRole="Driver" />
+        </EntityType>
+        <Association Name="FK_Season_ToCup">
+          <End Role="Cup" Type="Self.Cup" Multiplicity="1" />
+          <End Role="Season" Type="Self.Season" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Season">
+              <PropertyRef Name="CupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RaceResult_ToDriver">
+          <End Role="Driver" Type="Self.Driver" Multiplicity="0..1" />
+          <End Role="RaceResult" Type="Self.RaceResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Driver">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceResult">
+              <PropertyRef Name="DriverId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Standins_ToDriver">
+          <End Role="Driver" Type="Self.Driver" Multiplicity="1" />
+          <End Role="Standins" Type="Self.Standin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Driver">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Standins">
+              <PropertyRef Name="DriverId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TeamDrivers_ToDriver">
+          <End Role="Driver" Type="Self.Driver" Multiplicity="1" />
+          <End Role="TeamDrivers" Type="Self.TeamDriver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Driver">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TeamDrivers">
+              <PropertyRef Name="DriverId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Season_ToPointSystem">
+          <End Role="PointSystem" Type="Self.PointSystem" Multiplicity="1" />
+          <End Role="Season" Type="Self.Season" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PointSystem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Season">
+              <PropertyRef Name="PointSystemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Race_ToSeason">
+          <End Role="Season" Type="Self.Season" Multiplicity="1" />
+          <End Role="Race" Type="Self.Race" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Season">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Race">
+              <PropertyRef Name="SeasonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RaceResult_ToRace">
+          <End Role="Race" Type="Self.Race" Multiplicity="1" />
+          <End Role="RaceResult" Type="Self.RaceResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Race">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceResult">
+              <PropertyRef Name="RaceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Standins_ToRace">
+          <End Role="Race" Type="Self.Race" Multiplicity="1" />
+          <End Role="Standins" Type="Self.Standin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Race">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Standins">
+              <PropertyRef Name="RaceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Team_ToSeason">
+          <End Role="Season" Type="Self.Season" Multiplicity="1" />
+          <End Role="Team" Type="Self.Team" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Season">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Team">
+              <PropertyRef Name="SeasonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Standins_ToTeam">
+          <End Role="Team" Type="Self.Team" Multiplicity="1" />
+          <End Role="Standins" Type="Self.Standin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Standins">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TeamDrivers_ToTeam">
+          <End Role="Team" Type="Self.Team" Multiplicity="1" />
+          <End Role="TeamDrivers" Type="Self.TeamDriver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Team">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TeamDrivers">
+              <PropertyRef Name="TeamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DatabaseEntities" annotation:LazyLoadingEnabled="false">
+          <EntitySet Name="ClassPointSystems" EntityType="Self.ClassPointSystem" />
+          <EntitySet Name="Cups" EntityType="Self.Cup" />
+          <EntitySet Name="Drivers" EntityType="Self.Driver" />
+          <EntitySet Name="PointSystems" EntityType="Self.PointSystem" />
+          <EntitySet Name="Races" EntityType="Self.Race" />
+          <EntitySet Name="RaceResults" EntityType="Self.RaceResult" />
+          <EntitySet Name="Seasons" EntityType="Self.Season" />
+          <EntitySet Name="Standins" EntityType="Self.Standin" />
+          <EntitySet Name="Teams" EntityType="Self.Team" />
+          <EntitySet Name="TeamDrivers" EntityType="Self.TeamDriver" />
+          <AssociationSet Name="FK_Season_ToCup" Association="Self.FK_Season_ToCup">
+            <End Role="Cup" EntitySet="Cups" />
+            <End Role="Season" EntitySet="Seasons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RaceResult_ToDriver" Association="Self.FK_RaceResult_ToDriver">
+            <End Role="Driver" EntitySet="Drivers" />
+            <End Role="RaceResult" EntitySet="RaceResults" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Standins_ToDriver" Association="Self.FK_Standins_ToDriver">
+            <End Role="Driver" EntitySet="Drivers" />
+            <End Role="Standins" EntitySet="Standins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TeamDrivers_ToDriver" Association="Self.FK_TeamDrivers_ToDriver">
+            <End Role="Driver" EntitySet="Drivers" />
+            <End Role="TeamDrivers" EntitySet="TeamDrivers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Season_ToPointSystem" Association="Self.FK_Season_ToPointSystem">
+            <End Role="PointSystem" EntitySet="PointSystems" />
+            <End Role="Season" EntitySet="Seasons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Race_ToSeason" Association="Self.FK_Race_ToSeason">
+            <End Role="Season" EntitySet="Seasons" />
+            <End Role="Race" EntitySet="Races" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RaceResult_ToRace" Association="Self.FK_RaceResult_ToRace">
+            <End Role="Race" EntitySet="Races" />
+            <End Role="RaceResult" EntitySet="RaceResults" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Standins_ToRace" Association="Self.FK_Standins_ToRace">
+            <End Role="Race" EntitySet="Races" />
+            <End Role="Standins" EntitySet="Standins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Team_ToSeason" Association="Self.FK_Team_ToSeason">
+            <End Role="Season" EntitySet="Seasons" />
+            <End Role="Team" EntitySet="Teams" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Standins_ToTeam" Association="Self.FK_Standins_ToTeam">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="Standins" EntitySet="Standins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TeamDrivers_ToTeam" Association="Self.FK_TeamDrivers_ToTeam">
+            <End Role="Team" EntitySet="Teams" />
+            <End Role="TeamDrivers" EntitySet="TeamDrivers" />
+          </AssociationSet>
+          <EntitySet Name="ClassTypes" EntityType="DatabaseModel.ClassType" />
+          <AssociationSet Name="FK_ClassPointSystem_ToClass1" Association="DatabaseModel.FK_ClassPointSystem_ToClass1">
+            <End Role="ClassType" EntitySet="ClassTypes" />
+            <End Role="ClassPointSystem" EntitySet="ClassPointSystems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClassType_ToPointSystem" Association="DatabaseModel.FK_ClassType_ToPointSystem">
+            <End Role="PointSystem" EntitySet="PointSystems" />
+            <End Role="ClassType" EntitySet="ClassTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RaceResult_ToClassType" Association="DatabaseModel.FK_RaceResult_ToClassType">
+            <End Role="ClassType" EntitySet="ClassTypes" />
+            <End Role="RaceResult" EntitySet="RaceResults" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ClassType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PointSystemId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ClassPointSystems" Relationship="DatabaseModel.FK_ClassPointSystem_ToClass1" FromRole="ClassType" ToRole="ClassPointSystem" />
+        </EntityType>
+        <Association Name="FK_ClassPointSystem_ToClass1">
+          <End Type="DatabaseModel.ClassType" Role="ClassType" Multiplicity="1" />
+          <End Type="DatabaseModel.ClassPointSystem" Role="ClassPointSystem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClassType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ClassPointSystem">
+              <PropertyRef Name="ClassId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClassType_ToPointSystem">
+          <End Type="DatabaseModel.PointSystem" Role="PointSystem" Multiplicity="1" />
+          <End Type="DatabaseModel.ClassType" Role="ClassType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PointSystem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ClassType">
+              <PropertyRef Name="PointSystemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RaceResult_ToClassType">
+          <End Type="DatabaseModel.ClassType" Role="ClassType" Multiplicity="1" />
+          <End Type="DatabaseModel.RaceResult" Role="RaceResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClassType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RaceResult">
+              <PropertyRef Name="ClassTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DatabaseModelStoreContainer" CdmEntityContainer="DatabaseEntities">
+          <EntitySetMapping Name="ClassPointSystems">
+            <EntityTypeMapping TypeName="DatabaseModel.ClassPointSystem">
+              <MappingFragment StoreEntitySet="ClassPointSystem">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ClassId" ColumnName="ClassId" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="Points" ColumnName="Points" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cups">
+            <EntityTypeMapping TypeName="DatabaseModel.Cup">
+              <MappingFragment StoreEntitySet="Cup">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Drivers">
+            <EntityTypeMapping TypeName="DatabaseModel.Driver">
+              <MappingFragment StoreEntitySet="Driver">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PointSystems">
+            <EntityTypeMapping TypeName="DatabaseModel.PointSystem">
+              <MappingFragment StoreEntitySet="PointSystem">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Races">
+            <EntityTypeMapping TypeName="DatabaseModel.Race">
+              <MappingFragment StoreEntitySet="Race">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SeasonId" ColumnName="SeasonId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RaceResults">
+            <EntityTypeMapping TypeName="DatabaseModel.RaceResult">
+              <MappingFragment StoreEntitySet="RaceResult">
+                <ScalarProperty Name="ClassTypeId" ColumnName="ClassTypeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RaceId" ColumnName="RaceId" />
+                <ScalarProperty Name="DriverId" ColumnName="DriverId" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Seasons">
+            <EntityTypeMapping TypeName="DatabaseModel.Season">
+              <MappingFragment StoreEntitySet="Season">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CupId" ColumnName="CupId" />
+                <ScalarProperty Name="PointSystemId" ColumnName="PointSystemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Standins">
+            <EntityTypeMapping TypeName="DatabaseModel.Standin">
+              <MappingFragment StoreEntitySet="Standins">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TeamId" ColumnName="TeamId" />
+                <ScalarProperty Name="DriverId" ColumnName="DriverId" />
+                <ScalarProperty Name="RaceId" ColumnName="RaceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Teams">
+            <EntityTypeMapping TypeName="DatabaseModel.Team">
+              <MappingFragment StoreEntitySet="Team">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SeasonId" ColumnName="SeasonId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TeamDrivers">
+            <EntityTypeMapping TypeName="DatabaseModel.TeamDriver">
+              <MappingFragment StoreEntitySet="TeamDrivers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TeamId" ColumnName="TeamId" />
+                <ScalarProperty Name="DriverId" ColumnName="DriverId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClassTypes">
+            <EntityTypeMapping TypeName="DatabaseModel.ClassType">
+              <MappingFragment StoreEntitySet="ClassType">
+                <ScalarProperty Name="PointSystemId" ColumnName="PointSystemId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
