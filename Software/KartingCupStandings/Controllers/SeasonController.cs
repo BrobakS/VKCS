@@ -41,6 +41,7 @@ namespace KartingCupStandings.Controllers
             var teams = _db.Teams.Where(x => x.SeasonId == seasonId).ToList();
 
             teams.ForEach(x => x.TeamDrivers = _db.TeamDrivers.Where(z => x.Id == z.TeamId).ToList());
+            teams.ForEach(x => x.Standins = _db.Standins.Where(z => x.Id == z.TeamId).ToList());
             return teams;
         }
 

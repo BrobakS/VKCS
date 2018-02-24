@@ -25,5 +25,13 @@ namespace KartingCupStandings.Controllers
                 .ToList();
         }
 
+        // GET api/values 
+        public List<PointSystem> Get(int id)
+        {
+            return _db.PointSystems.Where(z => z.Id == id)
+                .Include(x => x.ClassTypes.Select(s => s.ClassPointSystems))
+                .ToList();
+        }
+
     }
 }

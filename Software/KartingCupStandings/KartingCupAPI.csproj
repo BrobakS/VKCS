@@ -109,6 +109,7 @@
     <Compile Include="Controllers\CupController.cs" />
     <Compile Include="Controllers\DriverController.cs" />
     <Compile Include="Controllers\SeasonController.cs" />
+    <Compile Include="Controllers\StandInController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
     <Compile Include="Controllers\TeamDriverController.cs" />
     <Compile Include="Cup.cs">

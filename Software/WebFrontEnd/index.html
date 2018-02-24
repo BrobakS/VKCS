@@ -47,7 +47,7 @@
             <div class="sidebar">
 
             </div>
-            {{}}
+            
             <div class="content">
                 <!--Cup selector-->
                 <md-content class="md-padding">
@@ -88,7 +88,7 @@
                     </md-autocomplete>
                 </md-content>
 
-
+                {{}}
                 <!-- Opret sæson knap-->
                 <md-button class="md-primary md-raised" ng-click="stdCtrl.ShowCreateSeason()" ng-if="stdCtrl.selectedCup">Opret sæson</md-button>
 
@@ -121,21 +121,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="driver in stdCtrl.Drivers | orderBy: '-totalPoints'" ng-if="driver !=empty">
-                                    <td class="team-standings__pos">{{$index+1}}</td>
-                                    <td class="team-standings__team">
-                                        <div class="team-meta">
-                                            <div class="team-meta__info">
-                                                <h3 class="team-meta__name">{{driver.Name}}</h3>
-                                                <!--<span class="team-meta__place">J.Jyde/J.Dalsgaard</span>-->
-                                            </div>
+                                
+                            <tr ng-repeat="driver in stdCtrl.Drivers | orderBy: '-totalPoints'" ng-if="driver !=empty">
+                                <td class="team-standings__pos">{{$index+1}}</td>
+                                <td class="team-standings__team">
+                                    <div class="team-meta">
+                                        <div class="team-meta__info">
+                                            <h3 class="team-meta__name">{{driver.Name}}</h3>
+                                            <!--<span class="team-meta__place">J.Jyde/J.Dalsgaard</span>-->
                                         </div>
-                                    </td>
-                                    <td ng-repeat="race in stdCtrl.selectedSeason.Races">
-                                        {{driver.points[race.Id]}}
-                                    </td>
-                                    <td class="team-standings__total">{{driver.totalPoints}}</td>
-                                </tr>
+                                    </div>
+                                </td>
+                                <td ng-repeat="race in stdCtrl.selectedSeason.Races">
+                                    {{driver.points[race.Id]}}
+                                </td>
+                                <td class="team-standings__total">{{driver.totalPoints}}</td>
+                            </tr>      
 
                             </tbody>
                         </table>
@@ -151,40 +152,38 @@
                     <div class="table-responsive">
                         <table class="table table-hover table-standings table-standings--full table-standings--full-football">
                             <thead>
-                            <tr>
-                                <th class="standings__pos">Pos</th>
-                                <th class="standings__driver" ng-click='stdCtrl.setOrderBy("name")'>Hold</th>
-                                <th ng-repeat="race in stdCtrl.selectedSeason.Races">
-                                    <i ng-click="stdCtrl.setOrderBy(race.Id)">{{race.Name}}</i>
-                                    <i class="fa fa-pencil-square-o icon" aria-hidden="true" ng-click="stdCtrl.ShowRace(race); raceModalStyle={'display': 'block'}"></i>
-                                    <i class="fa fa-trash-o icon" aria-hidden="true" ng-click="stdCtrl.DeleteRace(race);" confirm="Er du sikker på at du vil slette, {{race.Name}}?"></i>
-                                </th>
-                                <th class="standings__total" ng-click='stdCtrl.setOrderBy("total")'>Total</th>
-                            </tr>
+                                <tr>
+                                    <th class="standings__pos">Pos</th>
+                                    <th class="standings__driver" ng-click='stdCtrl.setOrderBy("name")'>Hold</th>
+                                    <th ng-repeat="race in stdCtrl.selectedSeason.Races">
+                                        <i ng-click="stdCtrl.setOrderBy(race.Id)">{{race.Name}}</i>
+                                    </th>
+                                    <th class="standings__total" ng-click='stdCtrl.setOrderBy("total")'>Total</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="team in stdCtrl.Teams | orderBy: '-totalPoints'" ng-if="team !=empty">
-                                <td class="team-standings__pos">{{$index+1}}</td>
-                                <td class="team-standings__team">
-                                    <div class="team-meta">
-                                        <div class="team-meta__info">
-                                            <h3 class="team-meta__name">{{team.Name}}</h3>
-                                            <!--<span class="team-meta__place">J.Jyde/J.Dalsgaard</span>-->
+                                <tr ng-repeat="team in stdCtrl.Teams | orderBy: '-totalPoints'" ng-if="team !=empty">
+                                    <td class="team-standings__pos">{{$index+1}}</td>
+                                    <td class="team-standings__team">
+                                        <div class="team-meta">
+                                            <div class="team-meta__info">
+                                                <h3 class="team-meta__name">{{team.Name}}</h3>
+                                                <!--<span class="team-meta__place">J.Jyde/J.Dalsgaard</span>-->
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td ng-repeat="race in stdCtrl.selectedSeason.Races">
-                                    {{team.points[race.Id]}}
-                                </td>
-                                <td class="team-standings__total">{{team.totalPoints}}</td>
-                            </tr>
+                                    </td>
+                                    <td ng-repeat="race in stdCtrl.selectedSeason.Races">
+                                        {{team.points[race.Id]}}
+                                    </td>
+                                    <td class="team-standings__total">{{team.totalPoints}}</td>
+                                </tr>
 
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            
+
 
 
         </div>
