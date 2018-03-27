@@ -19,10 +19,15 @@ namespace KartingCupStandings
             {
                 // Create HttpCient and make a request to api/values 
                 HttpClient client = new HttpClient();
-                
-
+                try
+                {
+                    System.Diagnostics.Process.Start(@"WebFrontEnd\index.html");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message + @"     WebFrontEnd\index.html");
+                }
                 Console.WriteLine("Server running");
-                //Console.WriteLine(response.Content.ReadAsStringAsync().Result);
                 Console.ReadLine();
             }
         }

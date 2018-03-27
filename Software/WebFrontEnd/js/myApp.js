@@ -15,7 +15,7 @@ vks.controller('standingsCtrl', function ($scope, $http, filterFilter, $filter) 
 
     //Race Modal
     stdCtrl.showRaceModal = false;
-    stdCtrl.ShowRace = function(race) {
+    stdCtrl.ShowRace = function (race) {
         stdCtrl.selectedRace = race;
         stdCtrl.getRaceResultsForRace(race.Id);
         stdCtrl.showRaceModal = true;
@@ -23,6 +23,33 @@ vks.controller('standingsCtrl', function ($scope, $http, filterFilter, $filter) 
     stdCtrl.CloseRace = function(race) {
         stdCtrl.showRaceModal = false;
         stdCtrl.classSearchText = "";
+    };
+
+    //Show team overview Modal
+    stdCtrl.showTeamOverviewModal = false;
+
+    stdCtrl.ShowTeamOverview = function (team) {
+        stdCtrl.selectedTeam = team;
+        stdCtrl.selectedTeamDrivers = stdCtrl.GetTeamDrivers(team);
+        stdCtrl.selectedTeamStandins = stdCtrl.GetTeamStandins(team);
+        stdCtrl.showTeamOverviewModal = true;
+
+    };
+
+    stdCtrl.CloseTeamOverview = function () {
+        stdCtrl.showTeamOverviewModal = false;
+    };
+
+    //Create Standin Modal
+    stdCtrl.showCreateStandinModal = false;
+
+    stdCtrl.ShowCreateStandin = function () {
+        stdCtrl.showCreateStandinModal = true;
+        
+    };
+
+    stdCtrl.CloseCreateStandin = function () {
+        stdCtrl.showCreateStandinModal = false;
     };
 
     //Create Race Modal
@@ -64,6 +91,26 @@ vks.controller('standingsCtrl', function ($scope, $http, filterFilter, $filter) 
                     console.log("Unable to delete race");
                 });
         } else {
+        }
+    };
+
+    stdCtrl.NewStandin = function (teamId, driverId, raceId) {
+        console.log("Adding standing  -  team: " + teamId + "  driverId: " + driverId + "  raceId: " + raceId);
+        
+        if (typeof (stdCtrl.selectedSeason) !== "undefined" && Object.keys(stdCtrl.selectedSeason).length !== 0) {
+            var standin = {
+                Id: undefined,
+                TeamId: teamId,
+                DriverId: driverId,
+                RaceId: raceId
+            };
+            $http.post("http://localhost:9000/api/standin/", standin)
+                .then(function successCallback(response) {
+                        stdCtrl.getTeamsForSeason(stdCtrl.selectedSeason.Id);
+                    },
+                    function errorCallback(response) {
+                        console.log("Unable to create new standin");
+                    });
         }
     };
 
@@ -131,6 +178,16 @@ vks.controller('standingsCtrl', function ($scope, $http, filterFilter, $filter) 
 
     stdCtrl.DriverSearch = function (query) {
         var results = query ? filterFilter(stdCtrl.AllDrivers, { Name: query }, stdCtrl.startsWith) : stdCtrl.AllDrivers;
+        return results;
+    }
+
+    stdCtrl.TeamSearch = function (query) {
+        var results = query ? filterFilter(stdCtrl.Teams, { Name: query }, stdCtrl.startsWith) : stdCtrl.Teams;
+        return results;
+    }
+
+    stdCtrl.RaceSearch = function (query) {
+        var results = query ? filterFilter(stdCtrl.selectedSeason.Races, { Name: query }, stdCtrl.startsWith) : stdCtrl.selectedSeason.Races;
         return results;
     }
 
@@ -363,6 +420,7 @@ vks.controller('standingsCtrl', function ($scope, $http, filterFilter, $filter) 
             .then(function successCallback(response) {
                 
                 stdCtrl.Teams = response.data;
+                console.log(stdCtrl.Teams);
                 stdCtrl.calcPoints();
             }, function errorCallback(response) {
                 console.log("Unable to get Teams");
@@ -443,6 +501,39 @@ vks.controller('standingsCtrl', function ($scope, $http, filterFilter, $filter) 
             }, function errorCallback(response) {
                 console.log("Unable to get cups");
             });
+    }
+
+    stdCtrl.GetTeamDrivers = function (team) {
+        var drivers = [];
+        if (typeof (team) !== "undefined") {
+            team.TeamDrivers.forEach(function(driver) {
+                drivers.push(stdCtrl.getDriverById(driver.DriverId));
+            });
+        }
+
+        return drivers;
+    }
+
+    stdCtrl.GetTeamStandins = function (team) {
+        var drivers = [];
+        if (typeof (team) !== "undefined") {
+            team.Standins.forEach(function (driver) {
+                
+                var originalDriver = stdCtrl.getDriverById(driver.DriverId);
+                var points = [];
+                points[driver.RaceId] = originalDriver.points[driver.RaceId];
+                var tempDriver =
+                {
+                        Name: originalDriver.Name,
+                        DisplayName: originalDriver.DisplayName,
+                        points: points,
+                        totalPoints: originalDriver.points[driver.RaceId]
+                };
+                drivers.push(tempDriver);
+            });
+        }
+
+        return drivers;
     }
 
     //<Create PDFs>

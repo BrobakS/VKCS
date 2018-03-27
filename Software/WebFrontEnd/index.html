@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>WebFrontEnd</title>
 
-    <link href="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.5/angular-material.css" rel="stylesheet" />
+    <link href="css/angular-material.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="css/default.css" rel="stylesheet" />
     <link href="css/style.css" rel="stylesheet" />
@@ -13,13 +13,13 @@
 
     <script src='js/pdfmake.min.js'></script>
     <script src='js/vfs_fonts.js'></script>
-   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
-    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
-    <script src="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.5/angular-material.js"></script>
+   <script src="js/angular.js"></script>
+    <script src="js/angular-animate.min.js"></script>
+    <script src="js/angular-route.min.js"></script>
+    <script src="js/angular-aria.min.js"></script>
+    <script src="js/angular-messages.min.js"></script>
+    <script src="js/svg-assets-cache.js"></script>
+    <script src="js/angular-material.js"></script>
     <script src="js/main.js"></script>
     <script src="js/myApp.js"></script>
 </head>
@@ -88,7 +88,7 @@
                     </md-autocomplete>
                 </md-content>
 
-                {{}}
+
                 <!-- Opret sæson knap-->
                 <md-button class="md-primary md-raised" ng-click="stdCtrl.ShowCreateSeason()" ng-if="stdCtrl.selectedCup">Opret sæson</md-button>
 
@@ -96,6 +96,8 @@
                 <md-button class="md-primary md-raised" ng-click="stdCtrl.ShowCreateRace()" ng-if="stdCtrl.selectedSeason">Opret løb</md-button>
 
                 <md-button class="md-primary md-raised" ng-click="stdCtrl.ShowCreateTeam()" ng-if="stdCtrl.selectedSeason">Opret Hold</md-button>
+
+                <md-button class="md-primary md-raised" ng-click="stdCtrl.ShowCreateStandin()" ng-if="stdCtrl.selectedSeason">Tilføj Standin</md-button>
 
                 <md-button class="md-primary md-raised" ng-click="stdCtrl.createPDF()" ng-if="stdCtrl.selectedSeason">Opret PDF</md-button>
 
@@ -144,9 +146,7 @@
                 </div>
             </div>
 
-
             <!--Team Standings table-->
-
             <div class="card card--has-table">
                 <div class="card__content">
                     <div class="table-responsive">
@@ -167,7 +167,7 @@
                                     <td class="team-standings__team">
                                         <div class="team-meta">
                                             <div class="team-meta__info">
-                                                <h3 class="team-meta__name">{{team.Name}}</h3>
+                                                <h3 class="team-meta__name" ng-click="stdCtrl.ShowTeamOverview(team)">{{team.Name}}</h3>
                                                 <!--<span class="team-meta__place">J.Jyde/J.Dalsgaard</span>-->
                                             </div>
                                         </div>
@@ -184,11 +184,8 @@
                 </div>
             </div>
 
-
-
         </div>
 
-        
         <div class="footer">
 
         </div>
@@ -276,8 +273,91 @@
             </div>
         </div>
     </div>  
+    
+    
+    <!-- Create Standin Modal -->
+    <div id="createStandinModal" class="createStandinModal" ng-show="stdCtrl.showCreateStandinModal">
+        <!-- Modal content   -->
+        <div class="modal-content">
+        
+            <span ng-class="close" ng-click="stdCtrl.CloseCreateStandin()">&times;</span>
+            <div class="card card--has-table">
+                <div class="card__content">
+                    <md-content>
 
-<!-- Create Race Modal -->
+
+                        <md-autocomplete md-no-cache="true"
+                                         md-selected-item=""
+                                         md-search-text="stdCtrl.StandInTeamName"
+                                         md-selected-item-change="stdCtrl.StandInTeam = team"
+                                         md-items="team in stdCtrl.TeamSearch(stdCtrl.StandInTeamName)"
+                                         md-item-text="team.Name"
+                                         md-min-length="0"
+                                         placeholder="Vælg et hold">
+                            <md-item-template>
+                                <span md-highlight-text="stdCtrl.StandInTeamName" md-highlight-flags="^i">{{team.Name}}</span>
+                            </md-item-template>
+                            <md-not-found>
+
+                                <a>
+                                    Ingen kører matchende "{{stdCtrl.StandInTeamName}}" blev fundet. Opret en ny!
+                                </a>
+
+                            </md-not-found>
+                        </md-autocomplete>
+
+
+                        <md-autocomplete md-no-cache="true"
+                                         md-selected-item=""
+                                         md-search-text="stdCtrl.StandInDriverName"
+                                         md-selected-item-change="stdCtrl.StandInDriver = driver"
+                                         md-items="driver in stdCtrl.DriverSearch(stdCtrl.StandInDriverName)"
+                                         md-item-text="driver.Name"
+                                         md-min-length="0"
+                                         placeholder="Vælg en Kører">
+                            <md-item-template>
+                                <span md-highlight-text="stdCtrl.StandInDriverName" md-highlight-flags="^i">{{driver.Name}}</span>
+                            </md-item-template>
+                            <md-not-found>
+
+                                <a>
+                                    Ingen kører matchende "{{stdCtrl.StandInDriverName}}" blev fundet. Opret en ny!
+                                </a>
+
+                            </md-not-found>
+                        </md-autocomplete>
+                        
+                        <md-autocomplete md-no-cache="true"
+                                         md-selected-item=""
+                                         md-search-text="stdCtrl.StandInRaceName"
+                                         md-selected-item-change="stdCtrl.StandInRace = race"
+                                         md-items="race in stdCtrl.RaceSearch(stdCtrl.StandInRaceName)"
+                                         md-item-text="race.Name"
+                                         md-min-length="0"
+                                         placeholder="Vælg en afdeling">
+                            <md-item-template>
+                                <span md-highlight-text="stdCtrl.StandInRaceName" md-highlight-flags="^i">{{race.Name}}</span>
+                            </md-item-template>
+                            <md-not-found>
+
+                                <a>
+                                    Ingen kører matchende "{{stdCtrl.StandInRaceName}}" blev fundet. Opret en ny!
+                                </a>
+
+                            </md-not-found>
+                        </md-autocomplete>
+
+                    </md-content>
+
+
+
+                    <md-button class="md-primary md-raised" ng-click="stdCtrl.NewStandin(stdCtrl.StandInTeam.Id , stdCtrl.StandInDriver.Id, stdCtrl.StandInRace.Id)">Opret</md-button>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+    <!-- Create Race Modal -->
     <div id="createRaceModal" class="createRaceModal" ng-show="stdCtrl.showCreateRaceModal">
     <!-- Modal content   -->
         <div class="modal-content" >
@@ -296,6 +376,8 @@
             </div>
         </div>
     </div>  
+    
+
 
     <!-- Update Race result Modal -->
     <div id="raceModal" class="raceModal" ng-show="stdCtrl.showRaceModal">
@@ -372,7 +454,108 @@
         </div>
           
     </div>
-
+    
+    
+    <!-- TeamOverviewModal -->
+    <div id="teamOverviewModal" class="teamOverviewModal" ng-show="stdCtrl.showTeamOverviewModal">
+        <!-- Modal content   -->
+        <div class="modal-content" >
+            <span ng-class="close" ng-click="stdCtrl.CloseTeamOverview()">&times;</span>
+            <div class="card card--has-table">
+                <div class="card__content">
+                    <md-content>
+                        <div class="card card--has-table">
+                            <div class="card__content">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-standings table-standings--full table-standings--full-football">
+                                        <thead>
+                                            <tr>
+                                                <th class="standings__pos">Pos</th>
+                                                <th class="standings__driver" ng-click='stdCtrl.setOrderBy("name")'>Driver</th>
+                                                <th ng-repeat="race in stdCtrl.selectedSeason.Races">
+                                                    <i ng-click="stdCtrl.setOrderBy(race.Id)">{{race.Name}}</i>
+                                                    <i class="fa fa-pencil-square-o icon" aria-hidden="true" ng-click="stdCtrl.ShowRace(race); raceModalStyle={'display': 'block'}"></i>
+                                                    <i class="fa fa-trash-o icon" aria-hidden="true" ng-click="stdCtrl.DeleteRace(race);" confirm="Er du sikker på at du vil slette, {{race.Name}}?"></i>
+                                                </th>
+                                                <th class="standings__total" ng-click='stdCtrl.setOrderBy("total")'>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Drivers -->
+                                            <tr ng-repeat="driver in stdCtrl.selectedTeamDrivers | orderBy: '-totalPoints'" ng-if="driver !=empty">
+                                                <td class="team-standings__pos">{{$index+1}}</td>
+                                                <td class="team-standings__team">
+                                                    <div class="team-meta">
+                                                        <div class="team-meta__info">
+                                                            <h3 class="team-meta__name">{{driver.Name}}</h3>
+                                                            <!--<span class="team-meta__place">J.Jyde/J.Dalsgaard</span>-->
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td ng-repeat="race in stdCtrl.selectedSeason.Races">
+                                                    {{driver.points[race.Id]}}
+                                                </td>
+                                                <td class="team-standings__total">{{driver.totalPoints}}</td>
+                                            </tr>
+                                            <!-- Divider -->
+                                            <tr>
+                                                <td class="team-standings__pos">Standins</td>
+                                                <td class="team-standings__team">
+                                                    <div class="team-meta">
+                                                        <div class="team-meta__info">
+                                                            <h3 class="team-meta__name"></h3>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td ng-repeat="race in stdCtrl.selectedSeason.Races">
+                                                    
+                                                </td>
+                                                <td class="team-standings__total"></td>
+                                            </tr>
+                                            <!-- Standins -->                                         
+                                            <tr ng-repeat="driver in stdCtrl.selectedTeamStandins | orderBy: '-totalPoints'" ng-if="driver !=empty">
+                                                <td class="team-standings__pos"></td>
+                                                <td class="team-standings__team">
+                                                    <div class="team-meta">
+                                                        <div class="team-meta__info">
+                                                            <h3 class="team-meta__name">{{driver.Name}}</h3>
+                                                            <!--<span class="team-meta__place">J.Jyde/J.Dalsgaard</span>-->
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td ng-repeat="race in stdCtrl.selectedSeason.Races">
+                                                    {{driver.points[race.Id]}}
+                                                </td>
+                                                <td class="team-standings__total">{{driver.totalPoints}}</td>
+                                            </tr>
+                                            <!-- Divider -->
+                                            <tr>
+                                                <td class="team-standings__pos">Team Total</td>
+                                                <td class="team-standings__team">
+                                                    <div class="team-meta">
+                                                        <div class="team-meta__info">
+                                                            <h3 class="team-meta__name"></h3>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td ng-repeat="race in stdCtrl.selectedSeason.Races">
+                                                    {{stdCtrl.selectedTeam.points[race.Id]}}
+                                                </td>
+                                                <td class="team-standings__total">{{stdCtrl.selectedTeam.totalPoints}}</td>
+                                            </tr>
+                                        
+                                            <!--Team total-->
+    
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </md-content>
+                </div>
+            </div>
+        </div>
+    </div>  
 
 </body>
 </html>
